@@ -271,7 +271,7 @@ namespace Ryujinx.HLE.HOS.Applets
                 InlineKeyboardState state = GetInlineState();
 
                 // Always show the keyboard if the state is 'Ready'.
-                bool showKeyboard = false; // _stateBg == InlineKeyboardState.Initialized;
+                bool showKeyboard = state == InlineKeyboardState.Unknown2;
 
                 switch (request)
                 {
@@ -306,14 +306,7 @@ namespace Ryujinx.HLE.HOS.Applets
                         break;
                     case InlineKeyboardRequest.Calc:
                         // Put the keyboard in a Ready state, this will force showing
-                        if (state != InlineKeyboardState.Initialized)
-                        {
-                            state = InlineKeyboardState.Initialized;
-                        }
-                        else
-                        {
-                            state = InlineKeyboardState.Unknown2;
-                        }
+                        state = InlineKeyboardState.Unknown2;
                         SetInlineState(state);
                         remaining = stream.Length - stream.Position;
                         if (remaining != Marshal.SizeOf<SoftwareKeyboardCalc>())
@@ -397,10 +390,13 @@ namespace Ryujinx.HLE.HOS.Applets
                                 _interactiveSession.Push(InlineResponses.DecidedCancel(newState));
                             }
 
+                            SetInlineState(state);
+                            _interactiveSession.Push(InlineResponses.Default(state));
+
                             // TODO: Why is this necessary? Does the software expect a constant stream of responses?
                             Thread.Sleep(500);
 
-                            Logger.Debug?.Print(LogClass.ServiceAm, "Resetting state of the keyboard...");
+                            Logger.Debug?.Print(LogClass.ServiceAm, $"Resetting state of the keyboard to {newState}...");
                             newState = InlineKeyboardState.Initialized;
                             SetInlineState(newState);
                             _interactiveSession.Push(InlineResponses.Default(newState));
