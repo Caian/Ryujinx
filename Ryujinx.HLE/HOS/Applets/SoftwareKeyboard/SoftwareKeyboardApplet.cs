@@ -102,6 +102,8 @@ namespace Ryujinx.HLE.HOS.Applets
 
         public ResultCode GetResult()
         {
+            Logger.Debug?.Print(LogClass.ServiceAm, $"Keyboard exiting");
+
             return ResultCode.Success;
         }
 
@@ -243,6 +245,8 @@ namespace Ryujinx.HLE.HOS.Applets
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 var request = (InlineKeyboardRequest)reader.ReadUInt32();
+
+                Logger.Debug?.Print(LogClass.ServiceAm, $"Keyboard received command {request}");
 
                 long remaining;
 
