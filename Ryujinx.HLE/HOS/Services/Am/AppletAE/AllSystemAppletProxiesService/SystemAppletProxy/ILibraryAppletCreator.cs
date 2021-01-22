@@ -80,6 +80,8 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Sys
 
             byte[] data = new byte[transferMem.Size];
 
+            Logger.Debug?.PrintStub(LogClass.ServiceAm, $"Requested size: {size}, data size: {data.Length}");
+
             transferMem.Creator.CpuMemory.Read(transferMem.Address, data);
 
             context.Device.System.KernelContext.Syscall.CloseHandle(handle);
