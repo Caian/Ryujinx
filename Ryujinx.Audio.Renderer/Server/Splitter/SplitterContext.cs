@@ -173,7 +173,7 @@ namespace Ryujinx.Audio.Renderer.Server.Splitter
             {
                 SplitterInParameter parameter = MemoryMarshal.Read<SplitterInParameter>(input);
 
-                Debug.Assert(parameter.IsMagicValid());
+                //Debug.Assert(parameter.IsMagicValid());
 
                 if (parameter.IsMagicValid())
                 {

@@ -42,11 +42,13 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Sys
         // CreateTransferMemoryStorage(b8, u64, handle<copy>) -> object<nn::am::service::IStorage>
         public ResultCode CreateTransferMemoryStorage(ServiceCtx context)
         {
-            bool isReadOnly = (context.RequestData.ReadInt64() & 1) != 0;
+            bool isReadOnly = (context.RequestData.ReadInt64() & 1) == 0;
             long size       = context.RequestData.ReadInt64();
             int  handle     = context.Request.HandleDesc.ToCopy[0];
 
             KTransferMemory transferMem = context.Process.HandleTable.GetObject<KTransferMemory>(handle);
+
+            Logger.Info?.Print(LogClass.ServiceAm, $"Requested size: {size}");
 
             if (size <= 0)
             {
@@ -54,6 +56,8 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Sys
             }
 
             byte[] data = new byte[transferMem.Size];
+
+            Logger.Info?.Print(LogClass.ServiceAm, $"Requested size: {size}, data size: {data.Length}");
 
             transferMem.Creator.CpuMemory.Read(transferMem.Address, data);
 
@@ -73,6 +77,8 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Sys
 
             KTransferMemory transferMem = context.Process.HandleTable.GetObject<KTransferMemory>(handle);
 
+            Logger.Info?.Print(LogClass.ServiceAm, $"Requested size: {size}");
+
             if (size <= 0)
             {
                 return ResultCode.ObjectInvalid;
@@ -80,7 +86,7 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Sys
 
             byte[] data = new byte[transferMem.Size];
 
-            Logger.Info?.PrintStub(LogClass.ServiceAm, $"Requested size: {size}, data size: {data.Length}");
+            Logger.Info?.Print(LogClass.ServiceAm, $"Requested size: {size}, data size: {data.Length}");
 
             transferMem.Creator.CpuMemory.Read(transferMem.Address, data);
 
