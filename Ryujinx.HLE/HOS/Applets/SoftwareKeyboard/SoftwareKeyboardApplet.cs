@@ -262,6 +262,10 @@ namespace Ryujinx.HLE.HOS.Applets
                         // Not used because we only send the entire string after confirmation.
                         _interactiveSession.Push(InlineResponses.Default());
                         break;
+                    case InlineKeyboardRequest.SetUserWordInfo:
+                        // TODO: May be used in the future for word suggestions.
+                        _interactiveSession.Push(InlineResponses.Default());
+                        break;
                     case InlineKeyboardRequest.SetCustomizeDic:
                         remaining = stream.Length - stream.Position;
                         if (remaining != Marshal.SizeOf<SoftwareKeyboardDictSet>())
