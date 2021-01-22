@@ -332,6 +332,17 @@ namespace Ryujinx.HLE.HOS.Applets
                         }
                         // Send an initialization finished signal.
                         _interactiveSession.Push(InlineResponses.FinishedInitialize(state));
+                        // Reset the cursor.
+                        state = InlineKeyboardState.DataAvailable;
+                        SetInlineState(state);
+                        if (_encoding == Encoding.UTF8)
+                        {
+                            _interactiveSession.Push(InlineResponses.MovedCursorUtf8("", state));
+                        }
+                        else
+                        {
+                            _interactiveSession.Push(InlineResponses.MovedCursor("", state));
+                        }
                         // Start a task with the GUI handler to get user's input.
                         new Task(() =>
                         {
@@ -377,10 +388,12 @@ namespace Ryujinx.HLE.HOS.Applets
 
                                 if (_encoding == Encoding.UTF8)
                                 {
+                                    _interactiveSession.Push(InlineResponses.MovedCursorUtf8(inputText, state));
                                     _interactiveSession.Push(InlineResponses.DecidedEnterUtf8(inputText, newState));
                                 }
                                 else
                                 {
+                                    _interactiveSession.Push(InlineResponses.MovedCursor(inputText, state));
                                     _interactiveSession.Push(InlineResponses.DecidedEnter(inputText, newState));
                                 }
                             }
