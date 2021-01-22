@@ -141,8 +141,12 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Lib
         // PopInteractiveOutData() -> object<nn::am::service::IStorage>
         public ResultCode PopInteractiveOutData(ServiceCtx context)
         {
+            Logger.Debug?.Print(LogClass.ServiceAm, $"Try pop data");
+
             if(_interactiveSession.TryPop(out byte[] data))
             {
+                Logger.Debug?.Print(LogClass.ServiceAm, $"Pop data");
+
                 MakeObject(context, new IStorage(data));
 
                 _interactiveOutDataEvent.WritableEvent.Clear();
