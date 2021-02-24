@@ -34,10 +34,11 @@ namespace Ryujinx.HLE.HOS.Tamper
 
             // TODO (Caian): It is unknown how PPTC behaves if the tamper modifies memory regions
             // belonging to code. So for now just disallow code tampering.
-            if ((va >= _process.MemoryManager.CodeRegionStart) && (va + size <= _process.MemoryManager.CodeRegionEnd))
+            // TODO (Caian): Check Disabled for this scratch branch.
+            /*if ((va >= _process.MemoryManager.CodeRegionStart) && (va + size <= _process.MemoryManager.CodeRegionEnd))
             {
                 throw new CodeRegionTamperedException($"Writing {size} bytes to address 0x{va:X16} alters code");
-            }
+            }*/
         }
 
         public T ReadMemory<T>(ulong va) where T : unmanaged
